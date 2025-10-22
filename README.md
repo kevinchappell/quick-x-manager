@@ -1,6 +1,8 @@
-# X.com Tweet Deleter
+# X.com Post/Tweet Deleter
 
-A Chrome extension that improves the X.com (Twitter) UI to make deleting tweets easier.
+A Chrome extension that improves the X.com (Twitter) UI to make deleting posts easier and faster.
+
+![alt text](image.png)
 
 ## Features
 
@@ -12,7 +14,7 @@ A Chrome extension that improves the X.com (Twitter) UI to make deleting tweets 
 ## Installation
 
 1. Clone or download this repository
-2. Open Chrome and navigate to `chrome://extensions/`
+2. Open Chrome and navigate to `chrome://extensions/` (`brave://extensions/` on Brave)
 3. Enable "Developer mode" in the top right corner
 4. Click "Load unpacked" and select the extension directory
 

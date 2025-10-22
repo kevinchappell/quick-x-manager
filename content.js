@@ -1,5 +1,23 @@
 // Content script for X.com Tweet Deleter extension
 
+// Function to get the current profile username from URL
+function getCurrentProfileUsername() {
+  const path = window.location.pathname;
+  // Match profile URLs like /username or /username/...
+  const match = path.match(/^\/([^/]+)(?:\/.*)?$/);
+  return match ? match[1] : null;
+}
+
+// Function to check if a tweet is from the current profile
+function isTweetFromCurrentProfile(tweet) {
+  const username = getCurrentProfileUsername();
+  if (!username) return false;
+  
+  // Look for a link in the tweet that matches the profile URL
+  const profileLink = tweet.querySelector(`a[href="/${username}"]`);
+  return !!profileLink;
+}
+
 // Function to add checkboxes to tweets
 function addCheckboxesToTweets() {
   // Select all tweet articles
@@ -8,6 +26,9 @@ function addCheckboxesToTweets() {
   tweets.forEach(tweet => {
     // Check if checkbox already exists to avoid duplicates
     if (tweet.querySelector('.tweet-delete-checkbox')) return;
+    
+    // Only add checkbox if tweet is from current profile
+    if (!isTweetFromCurrentProfile(tweet)) return;
     
     // Create checkbox element
     const checkbox = document.createElement('input');
@@ -142,9 +163,23 @@ function initializeExtension() {
         mutation.addedNodes.forEach(node => {
           if (node.nodeType === Node.ELEMENT_NODE) {
             // Check if added node is a tweet or contains tweets
-            if (node.matches && node.matches('article[data-testid="tweet"]') || 
-                node.querySelector && node.querySelector('article[data-testid="tweet"]')) {
-              addCheckboxesToTweets();
+            if (node.matches && node.matches('article[data-testid="tweet"]')) {
+              // Only add checkbox if tweet is from current profile
+              if (isTweetFromCurrentProfile(node)) {
+                addCheckboxesToTweets();
+              }
+            } else if (node.querySelector && node.querySelector('article[data-testid="tweet"]')) {
+              // For containers with multiple tweets, check each tweet
+              const tweets = node.querySelectorAll('article[data-testid="tweet"]');
+              let shouldAddCheckboxes = false;
+              tweets.forEach(tweet => {
+                if (isTweetFromCurrentProfile(tweet)) {
+                  shouldAddCheckboxes = true;
+                }
+              });
+              if (shouldAddCheckboxes) {
+                addCheckboxesToTweets();
+              }
             }
           }
         });
