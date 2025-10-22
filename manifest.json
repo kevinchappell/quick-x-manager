@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "X.com Tweet Deleter",
+  "version": "1.0",
+  "description": "Improves X.com UI to make deleting tweets easier",
+  "permissions": [
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "icons": {
+    "16": "icon16.svg",
+    "48": "icon48.svg",
+    "128": "icon128.svg"
+  }
+}
